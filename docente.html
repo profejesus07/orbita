@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Órbita · Centro de control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="css/docente.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+</head>
+<body>
+  <main class="contenedor">
+    <header class="barra-superior">
+      <a class="marca" href="index.html"><span class="marca-logo" aria-hidden="true"></span>Órbita</a>
+      <span class="etiqueta">Centro de control</span>
+    </header>
+
+    <!-- Bancos de preguntas -->
+    <section id="vista-bancos" class="oculto">
+      <div id="aviso-reanudar" class="aviso info fila entre oculto" style="margin-bottom:20px"></div>
+      <div class="fila entre" style="margin-bottom:16px">
+        <div>
+          <h1 style="font-size:2rem">Tus bancos de preguntas</h1>
+          <p class="ayuda" style="margin:0">Se guardan en este navegador. Exporta una copia para llevarlos a otro equipo.</p>
+        </div>
+        <div class="fila">
+          <label class="boton secundario" style="margin:0">
+            Importar archivo
+            <input id="importar-archivo" type="file" accept=".json,application/json" class="oculto">
+          </label>
+          <button id="nuevo-banco" class="boton combustible">Nuevo banco</button>
+        </div>
+      </div>
+      <div id="lista-bancos" class="rejilla-bancos"></div>
+    </section>
+
+    <!-- Editor de un banco -->
+    <section id="vista-editor" class="oculto">
+      <div class="fila entre" style="margin-bottom:16px">
+        <button id="editor-volver" class="boton secundario pequeno">← Volver</button>
+        <div class="fila">
+          <button id="editor-exportar" class="boton secundario">Exportar</button>
+          <button id="editor-guardar" class="boton combustible">Guardar banco</button>
+        </div>
+      </div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="campo">
+          <label for="editor-titulo">Título del banco</label>
+          <input id="editor-titulo" type="text" maxlength="80" placeholder="Ej.: Fracciones · 5.º grado">
+        </div>
+        <details class="lote">
+          <summary>Pegar varias preguntas a la vez</summary>
+          <p class="ayuda">Una pregunta por línea: <code>Pregunta ; respuesta correcta ; incorrecta ; incorrecta ; incorrecta</code>. Las opciones se mezclan al jugar.</p>
+          <textarea id="lote-texto" rows="5" placeholder="¿Cuánto es 3 × 4? ; 12 ; 7 ; 34 ; 9"></textarea>
+          <button id="lote-agregar" class="boton secundario" style="margin-top:10px">Añadir preguntas</button>
+        </details>
+      </div>
+      <div id="editor-errores" class="aviso oculto" style="margin-bottom:16px"></div>
+      <div id="editor-preguntas" class="pila"></div>
+      <button id="editor-agregar" class="boton secundario" style="margin-top:16px;width:100%">+ Añadir pregunta</button>
+    </section>
+
+    <!-- Configurar partida -->
+    <section id="vista-configurar" class="oculto">
+      <button id="configurar-volver" class="boton secundario pequeno" style="margin-bottom:16px">← Volver</button>
+      <div class="panel" style="max-width:640px">
+        <h1 style="font-size:2rem" id="configurar-titulo"></h1>
+        <p class="ayuda" id="configurar-resumen"></p>
+        <fieldset class="selector-modo">
+          <legend>¿Cómo termina la misión?</legend>
+          <label class="opcion-modo">
+            <input type="radio" name="modo" value="tiempo" checked>
+            <span><strong>Por tiempo</strong><span class="ayuda">Gana quien tenga más combustible al acabar.</span></span>
+          </label>
+          <label class="opcion-modo">
+            <input type="radio" name="modo" value="meta">
+            <span><strong>Por meta</strong><span class="ayuda">Termina cuando alguien llega a la meta de combustible.</span></span>
+          </label>
+        </fieldset>
+        <div class="campo" id="campo-minutos">
+          <label for="minutos">Duración</label>
+          <select id="minutos">
+            <option value="3">3 minutos</option>
+            <option value="5">5 minutos</option>
+            <option value="7" selected>7 minutos</option>
+            <option value="10">10 minutos</option>
+            <option value="15">15 minutos</option>
+            <option value="20">20 minutos</option>
+          </select>
+        </div>
+        <div class="campo oculto" id="campo-meta">
+          <label for="meta">Meta de combustible</label>
+          <select id="meta">
+            <option value="2000">2.000 · llegar a Ceres</option>
+            <option value="6000" selected>6.000 · llegar a Júpiter</option>
+            <option value="15000">15.000 · llegar a Saturno</option>
+            <option value="35000">35.000 · llegar a Urano</option>
+            <option value="150000">150.000 · llegar a Plutón</option>
+          </select>
+        </div>
+        <button id="abrir-sala" class="boton combustible grande">Abrir sala</button>
+      </div>
+    </section>
+
+    <!-- Sala de espera -->
+    <section id="vista-sala" class="oculto">
+      <div class="panel sala-cabecera">
+        <div>
+          <p class="ayuda" style="margin:0">Entra en <strong id="sala-url"></strong> y escribe el código</p>
+          <div class="codigo-gigante" id="sala-codigo"></div>
+        </div>
+        <div class="fila">
+          <button id="sala-cancelar" class="boton secundario">Cancelar</button>
+          <button id="despegar" class="boton combustible grande" disabled>Despegar 🚀</button>
+        </div>
+      </div>
+      <div class="fila entre" style="margin:24px 0 12px">
+        <h2 style="margin:0">Tripulación <span class="etiqueta" id="sala-contador">0</span></h2>
+        <span class="ayuda" id="sala-estado">Conectando…</span>
+      </div>
+      <div id="sala-jugadores" class="chips"></div>
+    </section>
+
+    <!-- Partida en curso -->
+    <section id="vista-partida" class="oculto">
+      <div class="fila entre" style="margin-bottom:16px">
+        <div class="fila">
+          <span class="etiqueta">Código <strong id="partida-codigo" style="color:var(--texto)"></strong></span>
+          <span class="etiqueta" id="partida-conexion">En línea</span>
+        </div>
+        <div class="fila">
+          <div class="reloj" id="partida-reloj"></div>
+          <button id="terminar" class="boton peligro">Terminar misión</button>
+        </div>
+      </div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="fila entre">
+          <h2 style="margin:0">Ruta de la tripulación</h2>
+          <span class="ayuda" id="partida-meta"></span>
+        </div>
+        <div class="ruta" id="ruta"></div>
+      </div>
+      <div class="rejilla-partida">
+        <div class="panel">
+          <h2>Clasificación</h2>
+          <ol class="lista-clasificacion" id="clasificacion"></ol>
+        </div>
+        <div class="panel pila">
+          <h2>La misión en números</h2>
+          <div class="cifras">
+            <div><span class="cifra" id="cifra-jugadores">0</span><span class="ayuda">en la nave</span></div>
+            <div><span class="cifra" id="cifra-respuestas">0</span><span class="ayuda">respuestas</span></div>
+            <div><span class="cifra" id="cifra-aciertos">0 %</span><span class="ayuda">de aciertos</span></div>
+          </div>
+          <h3 style="margin-top:20px">Preguntas más difíciles hasta ahora</h3>
+          <ol id="dificiles" class="lista-dificiles"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resultados -->
+    <section id="vista-resultados" class="oculto">
+      <div class="fila entre" style="margin-bottom:16px">
+        <h1 style="font-size:2rem;margin:0">Misión completada</h1>
+        <div class="fila">
+          <button id="descargar-csv" class="boton secundario">Descargar resultados (CSV)</button>
+          <button id="nueva-partida" class="boton combustible">Nueva misión</button>
+        </div>
+      </div>
+      <div id="podio" class="podio"></div>
+      <div class="rejilla-partida" style="margin-top:20px">
+        <div class="panel">
+          <h2>Por estudiante</h2>
+          <div class="tabla-scroll"><table class="tabla" id="tabla-estudiantes"></table></div>
+        </div>
+        <div class="panel">
+          <h2>Por pregunta</h2>
+          <p class="ayuda">Ordenadas de menor a mayor porcentaje de aciertos: las primeras son las que conviene repasar.</p>
+          <div class="tabla-scroll"><table class="tabla" id="tabla-preguntas"></table></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/docente.js"></script>
+</body>
+</html>

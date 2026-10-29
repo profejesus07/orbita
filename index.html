@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Órbita · Misiones de preguntas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <main class="contenedor">
+    <header class="barra-superior">
+      <a class="marca" href="index.html"><span class="marca-logo" aria-hidden="true"></span>Órbita</a>
+    </header>
+
+    <section class="portada">
+      <div>
+        <h1>Cada respuesta correcta es combustible para tu nave.</h1>
+        <p class="lema">Responde preguntas, mejora tu motor y viaja de la Tierra a Plutón antes que el resto de la tripulación.</p>
+      </div>
+
+      <div class="tarjetas-inicio">
+        <form class="panel tarjeta-inicio" action="jugar.html" method="get">
+          <h2>Soy estudiante</h2>
+          <p class="ayuda">Escribe el código que aparece en la pantalla de tu docente.</p>
+          <div class="campo">
+            <label for="sala" class="oculto">Código de la misión</label>
+            <input id="sala" name="sala" class="codigo" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000" autocomplete="off" required>
+          </div>
+          <button class="boton combustible grande" type="submit" style="width:100%">Unirme a la misión</button>
+        </form>
+
+        <div class="panel tarjeta-inicio">
+          <h2>Soy docente</h2>
+          <p class="ayuda">Crea tus bancos de preguntas, abre una sala y sigue la carrera en el proyector.</p>
+          <a class="boton secundario" href="docente.html">Ir al centro de control</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

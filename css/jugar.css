@@ -1,0 +1,59 @@
+.espera { text-align: center; padding-top: 18vh; }
+.nave-espera { font-size: 4.5rem; display: inline-block; animation: flotar 2.4s ease-in-out infinite; }
+@keyframes flotar { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-14px) rotate(-4deg); } }
+
+.tablero-jugador {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 12px max(16px, env(safe-area-inset-left)); padding-top: max(12px, env(safe-area-inset-top));
+  background: rgba(7, 11, 31, 0.92); border-bottom: 1px solid var(--borde);
+  backdrop-filter: blur(8px);
+}
+.tablero-jugador .ayuda { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.tanque { margin-right: auto; }
+.tanque-cifra { font-size: 2rem; line-height: 1; display: inline-block; }
+.dato strong { font: 700 1.3rem var(--fuente-titulos); font-variant-numeric: tabular-nums; }
+#juego-reloj.urgente { color: var(--error); }
+
+.progreso-planeta {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+  width: min(1180px, 100% - 32px); margin: 12px auto 0; font-weight: 700;
+}
+
+.pregunta-actual { max-width: 900px; margin-inline: auto; }
+.pregunta-texto { font-size: clamp(1.3rem, 3.6vw, 1.9rem); margin: 6px 0 20px; overflow-wrap: anywhere; }
+.opcion .texto { overflow-wrap: anywhere; }
+
+.feedback {
+  margin-top: 16px; padding: 14px 18px; border-radius: 12px;
+  font: 700 1.2rem var(--fuente-titulos); text-align: center;
+}
+.feedback.bien { background: rgba(61, 220, 151, 0.15); color: var(--exito); }
+.feedback.mal { background: rgba(255, 92, 122, 0.12); color: var(--error); }
+
+.hangar {
+  position: fixed; inset: 0; z-index: 20;
+  display: grid; place-items: center; padding: 16px;
+  background: rgba(3, 5, 16, 0.75);
+}
+.hangar-panel { width: min(620px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; background: var(--panel-solido); }
+
+.mejora { display: grid; grid-template-columns: 52px 1fr auto; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--borde); }
+.mejora .icono { font-size: 2rem; text-align: center; }
+.mejora h3 { margin: 0; }
+.mejora .niveles { display: flex; gap: 4px; margin: 6px 0; }
+.mejora .niveles span { width: 18px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.12); }
+.mejora .niveles span.lleno { background: var(--combustible); }
+.mejora .valores { font-size: 0.9rem; color: var(--texto-suave); }
+.mejora .valores strong { color: var(--texto); }
+@media (max-width: 480px) {
+  .mejora { grid-template-columns: 40px 1fr; }
+  .mejora .boton { grid-column: 1 / -1; }
+}
+
+.fin { text-align: center; margin-top: 24px; }
+.puesto-final { font: 700 5rem var(--fuente-titulos); color: var(--combustible); line-height: 1; margin: 10px 0; }
+.cifras-fin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; }
+.cifras-fin > div { padding: 12px 6px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); }
+.cifras-fin strong, .cifras-fin .cifra-combustible { display: block; font: 700 1.4rem var(--fuente-titulos); }
+.fin .lista-clasificacion { text-align: left; }
